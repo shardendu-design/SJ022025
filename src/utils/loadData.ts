@@ -1,6 +1,6 @@
-import { SensorData } from '../types';
-import sensorData from './sensorData.json';
+// utils/loadData.ts
+import data from '../data.json';
 
-export const loadSensorData = (): SensorData[] => {
-  return sensorData;
+export const loadSensorData = () => {
+  return data;
 };
