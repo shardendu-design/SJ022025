@@ -1,83 +1,179 @@
 // src/components/Sidebar/Sidebar.tsx
 import React, { useState } from 'react';
-import { List, ListItem, ListItemText, IconButton, Menu, MenuItem, Button, Box } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { addChart, editChart, deleteChart } from '../../store/slices/chartSlices';
+import Modal from '../Modal/Modal';
+import { Chart as ChartType } from '../../types';
+import {
+  Drawer,
+  Box,
+  Typography,
+  Button,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction,
+  useMediaQuery,
+  useTheme,
+  TextField,
+  InputAdornment,
+  Menu,
+  MenuItem,
+} from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-
-interface Chart {
-  id: string;
-  name: string;
-}
+import SearchIcon from "@mui/icons-material/Search";
 
 interface SidebarProps {
-  charts: Chart[];
-  onAddChart: () => void;
-  onEditChart: (chartId: string) => void;
-  onDeleteChart: (chartId: string) => void;
+  isModalOpen: boolean;
+  setModalOpen: (isOpen: boolean) => void;
 }
 
-const Sidebar = ({ charts, onAddChart, onEditChart, onDeleteChart }: SidebarProps) => {
+const Sidebar = ({ isModalOpen, setModalOpen }: SidebarProps) => {
+  const [editingChart, setEditingChart] = useState<ChartType | null>(null);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedChartId, setSelectedChartId] = useState<string | null>(null);
+  const charts = useSelector((state: any) => state.charts.charts);
+  const dispatch = useDispatch();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  const handleMenuClick = (event: React.MouseEvent<HTMLElement>, chartId: string) => {
+  // Filter charts based on search query
+  const filteredCharts = charts.filter((chart: ChartType) =>
+    chart.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleAddChart = (chart: ChartType) => {
+    dispatch(addChart(chart));
+    setModalOpen(false);
+  };
+
+  const handleEditChart = (chart: ChartType) => {
+    setEditingChart(chart);
+    setModalOpen(true);
+    handleCloseMenu();
+  };
+
+  const handleDeleteChart = (id: string) => {
+    dispatch(deleteChart(id));
+    handleCloseMenu();
+  };
+
+  const handleSaveEditedChart = (chart: ChartType) => {
+    dispatch(editChart(chart));
+    setModalOpen(false);
+    setEditingChart(null);
+  };
+
+  const handleDrawerToggle = () => {
+    setIsMobileOpen(!isMobileOpen);
+  };
+
+  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>, chartId: string) => {
     setAnchorEl(event.currentTarget);
     setSelectedChartId(chartId);
   };
 
-  const handleMenuClose = () => {
+  const handleCloseMenu = () => {
     setAnchorEl(null);
     setSelectedChartId(null);
   };
 
-  const handleEdit = () => {
-    if (selectedChartId) {
-      onEditChart(selectedChartId);
-      handleMenuClose();
-    }
-  };
-
-  const handleDelete = () => {
-    if (selectedChartId) {
-      onDeleteChart(selectedChartId);
-      handleMenuClose();
-    }
-  };
-
   return (
-    <Box sx={{ width: '100%', bgcolor: '#f5f5f5', height: '100vh', p: 2 }}>
-      <Button
-        variant="contained"
-        fullWidth
-        onClick={onAddChart}
-        sx={{ mb: 2 }}
+    <>
+      {isMobile && (
+        <IconButton
+          onClick={handleDrawerToggle}
+          sx={{ position: 'fixed', top: 10, left: 10, zIndex: 1200 }}
+        >
+          <MenuIcon />
+        </IconButton>
+      )}
+      <Drawer
+        variant={isMobile ? 'temporary' : 'permanent'}
+        open={isMobileOpen}
+        onClose={handleDrawerToggle}
+        sx={{
+          width: 250,
+          flexShrink: 0,
+          '& .MuiDrawer-paper': {
+            width: 250,
+            boxSizing: 'border-box',
+            backgroundColor: theme.palette.background.paper,
+          },
+        }}
       >
-        Add Chart
-      </Button>
-      <List>
-        {charts.map((chart) => (
-          <ListItem
-            key={chart.id}
-            secondaryAction={
-              <IconButton onClick={(e) => handleMenuClick(e, chart.id)}>
-                <MoreVertIcon />
-              </IconButton>
-            }
+        <Box sx={{ p: 2 }}>
+          
+          <TextField
+            fullWidth
+            size="small"
+            variant="outlined"
+            placeholder="Search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            sx={{ mb: 2 }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+          <Button
+            variant="contained"
+            fullWidth
+            onClick={() => setModalOpen(true)}
+            sx={{ mb: 2 }}
           >
-            <ListItemText primary={chart.name} />
-          </ListItem>
-        ))}
-      </List>
-
-      {/* Context Menu */}
+            Add Chart
+          </Button>
+          <List>
+            {filteredCharts.length === 0 ? (
+              <Typography variant="body2">No charts found.</Typography>
+            ) : (
+              filteredCharts.map((chart: ChartType) => (
+                <ListItem key={chart.id} component={Link} to={`/${chart.id}`}>
+                  <ListItemText primary={chart.name} />
+                  <ListItemSecondaryAction>
+                    <IconButton onClick={(e) => handleOpenMenu(e, chart.id)}>
+                      <MoreVertIcon />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
+              ))
+            )}
+          </List>
+        </Box>
+      </Drawer>
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
-        onClose={handleMenuClose}
+        onClose={handleCloseMenu}
+        onClick={handleCloseMenu}
       >
-        <MenuItem onClick={handleEdit}>Edit</MenuItem>
-        <MenuItem onClick={handleDelete}>Delete</MenuItem>
+        <MenuItem onClick={() => handleEditChart(charts.find((c: ChartType) => c.id === selectedChartId))}>
+          Edit
+        </MenuItem>
+        <MenuItem onClick={() => handleDeleteChart(selectedChartId!)}>
+          Delete
+        </MenuItem>
       </Menu>
-    </Box>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setModalOpen(false);
+          setEditingChart(null);
+        }}
+        onSave={editingChart ? handleSaveEditedChart : handleAddChart}
+        initialData={editingChart ?? undefined}
+      />
+    </>
   );
 };
 

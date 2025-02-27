@@ -1,16 +1,6 @@
-// src/store/slices/chartSlice.ts
+// store/slices/chartSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-interface Chart {
-  id: string;
-  name: string;
-  type: string;
-  color: string;
-  dataSeries: { value: number; date: string }[];
-  xAxisName: string;
-  yAxisName: string;
-  description: string;
-}
+import { Chart } from '../../types';
 
 interface ChartState {
   charts: Chart[];

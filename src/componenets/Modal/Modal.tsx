@@ -1,201 +1,130 @@
 // src/components/Modal/Modal.tsx
-import React from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { Modal, TextField, Button, Box, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
+import React, { useState } from 'react';
+import { SensorData, Chart as ChartType } from '../../types';
+import { loadSensorData } from '../../utils/loadData';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Select,
+  MenuItem,
+  Button,
+  FormControl,
+  InputLabel,
+  Typography,
+} from '@mui/material';
 
-interface ChartModalProps {
-  open: boolean;
+interface ModalProps {
+  isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: any) => void;
-  initialData: {
-    id: string;
-    name: string;
-    type: string;
-    color: string;
-    dataSeries: { value: number; date: string }[];
-    xAxisName: string;
-    yAxisName: string;
-    description: string;
-  };
-  dataSeriesOptions: { name: string; data: { value: number; date: string }[] }[];
+  onSave: (chart: ChartType) => void;
+  initialData?: ChartType;
 }
 
-const ChartModal = ({ open, onClose, onSubmit, initialData, dataSeriesOptions }: ChartModalProps) => {
-  const { control, handleSubmit, setValue } = useForm({
-    defaultValues: initialData,
-  });
+const Modal = ({ isOpen, onClose, onSave, initialData }: ModalProps) => {
+  const [name, setName] = useState(initialData?.name || '');
+  const [dataSeries, setDataSeries] = useState(initialData?.dataSeries || '');
+  const [type, setType] = useState(initialData?.type || 'line');
+  const [color, setColor] = useState(initialData?.color || '#000000');
+  const [xAxisName, setXAxisName] = useState(initialData?.xAxisName || 'Date');
+  const [yAxisName, setYAxisName] = useState(initialData?.yAxisName || '°C');
+  const [description, setDescription] = useState(initialData?.description || '');
+  const sensorData = loadSensorData();
 
-  // Options for type and color dropdowns
-  const typeOptions = ['line', 'bar', 'pie'];
-  const colorOptions = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#33FFF5'];
+  const handleSave = () => {
+    onSave({
+      id: initialData?.id || Date.now().toString(),
+      name,
+      dataSeries,
+      type,
+      color,
+      xAxisName,
+      yAxisName,
+      description,
+    });
+    setName('');
+    setDataSeries('');
+    setType('line');
+    setColor('#000000');
+    setXAxisName('Date');
+    setYAxisName('°C');
+    setDescription('');
+  };
 
   return (
-    <Modal
-      open={open}
-      onClose={onClose}
-      aria-labelledby="modal-title"
-      aria-describedby="modal-description"
-    >
-      <Box
-        sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: 400,
-          bgcolor: 'background.paper',
-          boxShadow: 24,
-          p: 4,
-          borderRadius: 2,
-        }}
-      >
-        <form onSubmit={handleSubmit(onSubmit)}>
-          {/* Chart Name */}
-          <Controller
-            name="name"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="Chart Name"
-                fullWidth
-                sx={{ mb: 2 }}
-              />
-            )}
-          />
-
-          {/* Chart Type */}
-          <FormControl fullWidth sx={{ mb: 2 }}>
-            <InputLabel>Chart Type</InputLabel>
-            <Controller
-              name="type"
-              control={control}
-              render={({ field }) => (
-                <Select {...field} label="Chart Type">
-                  {typeOptions.map((option) => (
-                    <MenuItem key={option} value={option}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </Select>
-              )}
-            />
-          </FormControl>
-
-          {/* Chart Color */}
-          <FormControl fullWidth sx={{ mb: 2 }}>
-            <InputLabel>Chart Color</InputLabel>
-            <Controller
-              name="color"
-              control={control}
-              render={({ field }) => (
-                <Select {...field} label="Chart Color">
-                  {colorOptions.map((option) => (
-                    <MenuItem key={option} value={option}>
-                      <Box
-                        sx={{
-                          width: 20,
-                          height: 20,
-                          backgroundColor: option,
-                          mr: 2,
-                        }}
-                      />
-                      {option}
-                    </MenuItem>
-                  ))}
-                </Select>
-              )}
-            />
-          </FormControl>
-
-          {/* Data Series */}
-          <FormControl fullWidth sx={{ mb: 2 }}>
-            <InputLabel>Data Series</InputLabel>
-            <Controller
-              name="dataSeries"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  label="Data Series"
-                  value={field.value || []}
-                  onChange={(e) => {
-                    const selectedData = JSON.parse(e.target.value as string);
-                    field.onChange(selectedData);
-                  }}
-                >
-                  {dataSeriesOptions.map((option) => (
-                    <MenuItem key={option.name} value={JSON.stringify(option.data)}>
-                      {option.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              )}
-            />
-          </FormControl>
-
-          {/* X-Axis Name */}
-          <Controller
-            name="xAxisName"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="X-Axis Name"
-                fullWidth
-                sx={{ mb: 2 }}
-              />
-            )}
-          />
-
-          {/* Y-Axis Name */}
-          <Controller
-            name="yAxisName"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="Y-Axis Name"
-                fullWidth
-                sx={{ mb: 2 }}
-              />
-            )}
-          />
-
-          {/* Description */}
-          <Controller
-            name="description"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="Description"
-                fullWidth
-                multiline
-                rows={4}
-                sx={{ mb: 2 }}
-              />
-            )}
-          />
-
-          {/* Save and Cancel Buttons */}
-          <Box sx={{ display: 'flex', gap: 2 }}>
-            <Button
-              type="button"
-              variant="outlined"
-              fullWidth
-              onClick={onClose}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" variant="contained" fullWidth>
-              Save
-            </Button>
-          </Box>
-        </form>
-      </Box>
-    </Modal>
+    <Dialog open={isOpen} onClose={onClose} maxWidth="sm" fullWidth>
+      <DialogTitle>{initialData ? 'Edit Chart' : 'Add Chart'}</DialogTitle>
+      <DialogContent>
+        <TextField
+          fullWidth
+          label="Chart Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          sx={{ mb: 2 }}
+        />
+        <FormControl fullWidth sx={{ mb: 2 }}>
+          <InputLabel>Data Series</InputLabel>
+          <Select
+            value={dataSeries}
+            onChange={(e) => setDataSeries(e.target.value)}
+            label="Data Series"
+          >
+            {sensorData.map((sensor) => (
+              <MenuItem key={sensor.name} value={sensor.name}>
+                {sensor.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl fullWidth sx={{ mb: 2 }}>
+          <InputLabel>Chart Type</InputLabel>
+          <Select value={type} onChange={(e) => setType(e.target.value)} label="Chart Type">
+            <MenuItem value="line">Line Chart</MenuItem>
+            <MenuItem value="bar">Bar Chart</MenuItem>
+            <MenuItem value="pie">Pie Chart</MenuItem>
+          </Select>
+        </FormControl>
+        <TextField
+          fullWidth
+          type="color"
+          label="Chart Color"
+          value={color}
+          onChange={(e) => setColor(e.target.value)}
+          sx={{ mb: 2 }}
+        />
+        <TextField
+          fullWidth
+          label="X-axis Name"
+          value={xAxisName}
+          onChange={(e) => setXAxisName(e.target.value)}
+          sx={{ mb: 2 }}
+        />
+        <TextField
+          fullWidth
+          label="Y-axis Name"
+          value={yAxisName}
+          onChange={(e) => setYAxisName(e.target.value)}
+          sx={{ mb: 2 }}
+        />
+        <TextField
+          fullWidth
+          label="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          multiline
+          rows={4}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={handleSave} variant="contained">
+          Save
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 
-export default ChartModal;
+export default Modal;
