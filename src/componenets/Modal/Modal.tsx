@@ -34,6 +34,11 @@ const Modal = ({ isOpen, onClose, onSave, initialData }: ModalProps) => {
   const sensorData = loadSensorData();
 
   const handleSave = () => {
+    if (!name.trim()) {
+      alert("Name is required!");
+      return;
+    }
+  
     onSave({
       id: initialData?.id || Date.now().toString(),
       name,
@@ -44,6 +49,7 @@ const Modal = ({ isOpen, onClose, onSave, initialData }: ModalProps) => {
       yAxisName,
       description,
     });
+  
     setName('');
     setDataSeries('');
     setType('line');
@@ -59,9 +65,40 @@ const Modal = ({ isOpen, onClose, onSave, initialData }: ModalProps) => {
       <DialogContent>
         <TextField
           fullWidth
-          label="Chart Name"
+          label={
+            <>
+              Name <span style={{ color: "red" }}>*</span>
+            </>
+          } 
           value={name}
           onChange={(e) => setName(e.target.value)}
+          sx={{ mb: 2 }}
+          helperText={!name.trim() ? "This field is required" : ""} 
+          FormHelperTextProps={{
+            style: { color: "red" } // Change only the helper text color
+          }}
+        />
+        
+        <FormControl fullWidth sx={{ mb: 2 }}>
+        <InputLabel>
+          Chart Type <span style={{ color: "red" }}>*</span>
+        </InputLabel>
+          <Select value={type} onChange={(e) => setType(e.target.value)} label="Chart Type">
+            <MenuItem value="line">Line Chart</MenuItem>
+            <MenuItem value="bar">Bar Chart</MenuItem>
+            <MenuItem value="pie">Pie Chart</MenuItem>
+          </Select>
+        </FormControl>
+        <TextField
+          fullWidth
+          type="color"
+          label={
+            <>
+              Color <span style={{ color: "red" }}>*</span>
+            </>
+          }
+          value={color}
+          onChange={(e) => setColor(e.target.value)}
           sx={{ mb: 2 }}
         />
         <FormControl fullWidth sx={{ mb: 2 }}>
@@ -78,22 +115,7 @@ const Modal = ({ isOpen, onClose, onSave, initialData }: ModalProps) => {
             ))}
           </Select>
         </FormControl>
-        <FormControl fullWidth sx={{ mb: 2 }}>
-          <InputLabel>Chart Type</InputLabel>
-          <Select value={type} onChange={(e) => setType(e.target.value)} label="Chart Type">
-            <MenuItem value="line">Line Chart</MenuItem>
-            <MenuItem value="bar">Bar Chart</MenuItem>
-            <MenuItem value="pie">Pie Chart</MenuItem>
-          </Select>
-        </FormControl>
-        <TextField
-          fullWidth
-          type="color"
-          label="Chart Color"
-          value={color}
-          onChange={(e) => setColor(e.target.value)}
-          sx={{ mb: 2 }}
-        />
+        
         <TextField
           fullWidth
           label="X-axis Name"
@@ -110,7 +132,7 @@ const Modal = ({ isOpen, onClose, onSave, initialData }: ModalProps) => {
         />
         <TextField
           fullWidth
-          label="Description"
+          label="Text Description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           multiline
@@ -120,7 +142,7 @@ const Modal = ({ isOpen, onClose, onSave, initialData }: ModalProps) => {
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
         <Button onClick={handleSave} variant="contained">
-          Save
+          ADD CHART
         </Button>
       </DialogActions>
     </Dialog>

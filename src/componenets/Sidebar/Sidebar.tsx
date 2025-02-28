@@ -108,7 +108,12 @@ const Sidebar = ({ isModalOpen, setModalOpen }: SidebarProps) => {
         }}
       >
         <Box sx={{ p: 2 }}>
-          
+          {/* Logo and Name at the top */}
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+            <img src="path_to_logo.png" alt="Logo" style={{ width: 40, height: 40, marginRight: 10 }} />
+            <Typography variant="body1" component="div">Logoipusum</Typography>
+          </Box>
+
           <TextField
             fullWidth
             size="small"

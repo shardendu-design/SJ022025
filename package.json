@@ -17,7 +17,7 @@
     "@types/node": "^16.18.126",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
-    "date-fns": "^4.1.0",
+    "date-fns": "^2.29.3",
     "highcharts": "^12.1.2",
     "highcharts-react-official": "^3.2.1",
     "react": "^19.0.0",
