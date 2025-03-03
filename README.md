@@ -3,13 +3,12 @@
 This application is developed using React and TypeScript, along with MUI, to visualize sensor data in a clean dashboard. It also allows users to edit and delete items. If the route doesn't match any page, a 404 error page will be displayed.
 
 ## Table of Contents
-- [Technology Used](#technology)
 
-- [Setup Instructions](#setup)
+- [Technology Used](#technology-used)
 
-- [How to Use](#use)
+- [Setup Instructions](#setup-instructions)
 
-
+- [How to Use](#how-to-use)
 
 ## Technology Used
 
