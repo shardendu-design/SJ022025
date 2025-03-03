@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { addChart, editChart, deleteChart } from '../../store/slices/chartSlices';
 import Modal from '../Modal/Modal';
 import { Chart as ChartType } from '../../types';
+import logo from '../../assets/dashboard.png'; 
 import {
   Drawer,
   Box,
@@ -108,9 +109,9 @@ const Sidebar = ({ isModalOpen, setModalOpen }: SidebarProps) => {
         }}
       >
         <Box sx={{ p: 2 }}>
-          {/* Logo and Name at the top */}
+          {/* Logo and Name  */}
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-            <img src="path_to_logo.png" alt="Logo" style={{ width: 40, height: 40, marginRight: 10 }} />
+            <img src={logo} alt="" style={{ width: 30, height: 30, marginRight: 10 }} />
             <Typography variant="body1" component="div">Logoipusum</Typography>
           </Box>
 

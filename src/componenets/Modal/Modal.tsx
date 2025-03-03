@@ -102,20 +102,26 @@ const Modal = ({ isOpen, onClose, onSave, initialData }: ModalProps) => {
           sx={{ mb: 2 }}
         />
         <FormControl fullWidth sx={{ mb: 2 }}>
-          <InputLabel>Data Series</InputLabel>
-          <Select
-            value={dataSeries}
-            onChange={(e) => setDataSeries(e.target.value)}
-            label="Data Series"
-          >
-            {sensorData.map((sensor) => (
-              <MenuItem key={sensor.name} value={sensor.name}>
-                {sensor.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        
+        <InputLabel shrink>
+          Data Series <span style={{ color: "red" }}>*</span>
+        </InputLabel>
+        <Select
+          value={dataSeries}
+          onChange={(e) => setDataSeries(e.target.value)}
+          displayEmpty
+          label="Data Series"
+        >
+          <MenuItem value="" disabled>
+            Data Series
+          </MenuItem>
+          {sensorData.map((sensor) => (
+            <MenuItem key={sensor.name} value={sensor.name}>
+              {sensor.name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+
         <TextField
           fullWidth
           label="X-axis Name"

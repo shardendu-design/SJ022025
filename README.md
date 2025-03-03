@@ -1,46 +1,88 @@
-# Getting Started with Create React App
+# Sensor Data Visulaization App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This application is developed using React and TypeScript, along with MUI, to visualize sensor data in a clean dashboard. It also allows users to edit and delete items. If the route doesn't match any page, a 404 error page will be displayed.
 
-## Available Scripts
+## Table of Contents
+* Technology Used
+* Setup Instructions
+* How to Use
 
-In the project directory, you can run:
 
-### `npm start`
+## Technology Used
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+* React -- JavaScripts library for building user interface.
+* Typescript -- Typed superset of JavaScript in which specified the type.
+* Hook Form -- State management for Raect.
+* React-router -- Routing library for Ract
+* MUI -- Material UI for React to make responsive for both desktop and mobile.
+* Redux -- State management for React apps.
+* Highcharts -- Library for creating intractive way of visualize data.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Setup Instructions
 
-### `npm test`
+1. Create a TypeScript project using the command npx create-react-app sj022025 --template typescript, and then rename it to SJ022025.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. First, create a project with the given name starting with capital letters. Since NPM doesn't support project names that start with capital letters, the easiest way to create a project name with a capital letter is to first create it with lowercase letters and then rename it to start with a capital letter, followed by the month and year.
 
-### `npm run build`
+3. After successfully creating the project, install all the dependencies using the command: npm install @mui/material @emotion/react @emotion/styled react-router-dom @reduxjs/toolkit react-redux highcharts react-hook-form.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+4. Here we use npx to run packages or executables directly without needing to install them first. Once the project is created, we can customize the src folder according to the project requirements.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+5. To run the project, use npm start, and the page will be displayed at http://localhost:3000. To stop the server, press Cmd + C.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+6. After successfully running the server, we need to create a repository on GitHub and add our project to the repository at [www.github.com/your-username/repository-name](https://github.com/shardendu-design/SJ022025).
 
-### `npm run eject`
+7. After successfully setting up and running the server, you need to add files and folders as per the project requirements. In this project, the following structure is needed for the project to run successfully.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```bash
+├── package-lock.json
+├── package.json
+├── public
+│   └── index.html
+├── src
+│   ├── App.test.tsx
+│   ├── App.tsx
+│   ├── assets
+│   │   └── dashboard.png
+│   ├── componenets
+│   │   ├── 404Page
+│   │   │   └── 404Page.tsx
+│   │   ├── Chart
+│   │   │   └── Chart.tsx
+│   │   ├── Modal
+│   │   │   └── Modal.tsx
+│   │   └── Sidebar
+│   │       └── Sidebar.tsx
+│   ├── data.json
+│   ├── hooks
+│   ├── index.css
+│   ├── index.tsx
+│   ├── logo.svg
+│   ├── react-app-env.d.ts
+│   ├── reportWebVitals.ts
+│   ├── setupTests.ts
+│   ├── store
+│   │   ├── slices
+│   │   │   └── chartSlices.ts
+│   │   └── store.ts
+│   ├── types.ts
+│   └── utils
+│       └── loadData.ts
+└── tsconfig.json
+```
+## How to Use
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Once app is running..
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+* The home page will display an empty sidebar with no list of items, along with an option to create a new item using the existing JSON data.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+* Creating an item allows you to generate a new entry using the existing data, with a preferred color and text description for the current session. Once created, the item will appear in the sidebar.
 
-## Learn More
+* To view the visualization, select an item from the list, and the visual representation along with the text description and period date will appear.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+* In the sidebar, there is a context menu with options to edit and delete items. You can edit an existing item or delete it as needed.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+* At the top of the sidebar, there is a search option to help find a specific item.
+
+* All undefined routes display an error page with the message 'Page not found. Please try again later.' along with a Home button.
+
