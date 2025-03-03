@@ -32,7 +32,7 @@ This application is developed using React and TypeScript, along with MUI, to vis
 
 5. To run the project, use npm start, and the page will be displayed at http://localhost:3000. To stop the server, press Cmd + C.
 
-6. After successfully running the server, we need to create a repository on GitHub and add our project to the repository at [www.github.com/your-username/repository-name](https://github.com/shardendu-design/SJ022025).
+6. After successfully running the server, we need to create a repository on GitHub and add our project to the repository at [https://github.com/shardendu-design/SJ022025](https://github.com/shardendu-design/SJ022025).
 
 7. After successfully setting up and running the server, you need to add files and folders as per the project requirements. In this project, the following structure is needed for the project to run successfully.
 
